@@ -1,0 +1,158 @@
+<?xml version='1.0'?>
+
+<robot name="archi" xmlns:xacro="https://www.ros.org/wiki/xacro">
+
+<!--  <xacro:include filename="$(find adescription)/urdf/macros.xacro" />-->
+    <xacro:include filename="$(find adescription)/urdf/data.xacro" />
+<!--    -->
+    <xacro:macro name="camera_arm">
+
+
+        <link name="base_arm_link">
+            <inertial>
+                      <origin xyz="0 0 0" rpy="0 0 0"/>
+                      <mass value="${joints_mass}" />
+                      <box_inertia
+                      m="${base_mass}"
+                      x="${base_short}"
+                      y="${base_short}"
+                      z="${base_long}"/>
+            </inertial>
+
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${base_short} ${base_short} ${base_long}"/>
+                </geometry>
+            </collision>
+
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <box size="${base_short} ${base_short} ${base_long}"/>
+                </geometry>
+            </visual>
+        </link>
+
+        <joint name="base_arm_hinge" type="fixed">
+          <parent link="chassis"/>
+          <child link="base_arm_link"/>
+          <origin xyz="${chassisLength/2-base_long} 0 ${chassisHeight/2+base_long/2}" rpy="0 0 0"/>
+        </joint>
+
+        <link name="yaw_link">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${joints_mass}"/>
+                <box_inertia
+                m="${joints_mass}"
+                x="${joints_short}"
+                y="${joints_short}"
+                z="${joints_long}"/>
+
+            </inertial>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${joints_short} ${joints_short} ${joints_long}"/>
+                </geometry>
+            </collision>
+            <visual>
+                <origin rpy="0.0 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <box size="${joints_short} ${joints_short} ${joints_long}"/>
+                </geometry>
+            </visual>
+        </link>
+
+        <gazebo reference="yaw_link">
+            <kp>100000.0</kp>
+            <kd>100000.0</kd>
+            <mu1>10.0</mu1>
+            <mu2>10.0</mu2>
+            <material>Gazebo/Blue</material>
+        </gazebo>
+
+        <joint name="yaw_joint" type="continuous">
+            <parent link="base_arm_link"/>
+            <child link="yaw_link"/>
+            <origin xyz="0 0 0.03" rpy="0 0 0"/>
+            <limit effort="${joint_yaw_max_effort}" velocity="${joint_yaw_max_speed}"/>
+            <axis xyz="0 0 1"/>
+        </joint>
+
+        <transmission name="tran1">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="yaw_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="motor1">
+                <hardwareInterface>EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <link name="pitch_link">
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${joints_mass}" />
+                <box_inertia
+                m="${joints_mass}"
+                x="${joints_short}"
+                y="${joints_long}"
+                z="${joints_short}"/>
+
+            </inertial>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${joints_short} ${joints_long} ${joints_short}"/>
+                </geometry>
+            </collision>
+            <visual>
+                <origin rpy="0.0 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <box size="${joints_short} ${joints_long} ${joints_short}"/>
+                </geometry>
+            </visual>
+        </link>
+
+        <gazebo reference="pitch_link">
+            <kp>100000.0</kp>
+            <kd>100000.0</kd>
+            <mu1>10.0</mu1>
+            <mu2>10.0</mu2>
+            <material>Gazebo/Green</material>
+        </gazebo>
+
+        <joint name="pitch_joint" type="revolute">
+            <parent link="yaw_link"/>
+            <child link="pitch_link"/>
+            <origin xyz="0.0 0.0 0.035" rpy="0 0 0"/>
+            <limit lower="-0.7" upper="0.7" effort="${joint_pitch_effort}" velocity="${joint_pitch_max_speed}"/>
+            <axis xyz="0 1 0"/>
+        </joint>
+
+        <transmission name="tran2">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="pitch_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="motor2">
+                <hardwareInterface>EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <gazebo>
+          <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/pan_and_tilt</robotNamespace>
+                <legacyModeNS>true</legacyModeNS>
+          </plugin>
+        </gazebo>
+
+    </xacro:macro>
+
+
+
+</robot>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <rosparam file="$(find adescription)/config/pan_and_tilt.yaml"
+            command="load"/>
+
+    <node name="robot_state_publisher_pan_and_tilt" pkg="robot_state_publisher" type="robot_state_publisher"
+        respawn="false" output="screen">
+            <param name="publish_frequency" type="double" value="5.0" />
+            <remap from="/joint_states" to="/pan_and_tilt/joint_states"/>
+        </node>
+
+    <!-- This is needed because controller manager needs the robot description parameter -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find adescription)/urdf/two_wheel_bot.xacro'" />
+
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" ns="/pan_and_tilt" args="joint_state_controller
+                              pitch_joint_position_controller
+                              yaw_joint_position_controller">
+    </node>
+
+</launch>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <arg name="world" default="empty"/>
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find agazebo)/world/archi.world"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <param name="adescription" command="$(find xacro)/xacro --inorder '$(find adescription)/urdf/two_wheel_bot.xacro'"/>
+<!--  <param name="adescription" command="$(find xacro)/xacro &#45;&#45;inorder '$(find adescription)/urdf/camera_arm.xacro'"/>-->
+
+  <include file="$(find agazebo)/launch/control_pan_and_tilt.launch"/>
+
+  <arg name="x" default="0"/>
+  <arg name="y" default="0"/>
+  <arg name="z" default="0"/>
+
+
+  <node name="archi_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
+          args="-urdf -param adescription -model ArchiBot_PandT_Camera -x $(arg x) -y $(arg y) -z $(arg z)"/>
+
+
+  <node name="pan_and_tilt_server_node"
+        pkg="pan_and_tilt_control"
+        type="pan_and_tilt_server.py"
+        respawn="false"
+        output="screen"/>
+
+<!--  <node name="line_follower_node"-->
+<!--      pkg="agazebo"-->
+<!--      type="linefollower_test_ok3.py"-->
+<!--      respawn="false"-->
+<!--      output="screen"/>-->
+
+<!--  <node name="chase_line_node"-->
+<!--    pkg="agazebo"-->
+<!--    type="chase_line2.py"-->
+<!--    respawn="false"-->
+<!--    output="screen"/>-->
+
+<!--  <node name="pan_and_tilt_node"-->
+<!--    pkg="agazebo"-->
+<!--    type="pan_and_tilt_def.py"-->
+<!--    respawn="false"-->
+<!--    output="screen"/>-->
+
+
+</launch>

@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="https://www.ros.org/wiki/xacro" name="maincamera">
+
+
+    <xacro:macro name="maincamera">
+
+        <link name="main_camera_link">
+            <!-- Inertial for gazebo to take it into account, Put 1gr weight -->
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${maincamera_mass}" />
+                <box_inertia
+				m="${maincamera_mass}"
+				x="${maincamera_size_long}"
+				y="${maincamera_size_short}"
+				z="${maincamera_size_short}"/>
+            </inertial>
+    		<visual>
+                <origin rpy="0.0 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <box size="${maincamera_size_long} ${maincamera_size_short} ${maincamera_size_short}"/>
+                </geometry>
+            </visual>
+    	</link>
+
+        <gazebo reference="main_camera_link">
+            <material>Gazebo/Red</material>
+        </gazebo>
+
+        <joint name="main_camera_joint" type="fixed">
+            <parent link="pitch_link"/>
+            <child link="main_camera_link"/>
+            <origin xyz="0 0 0.01" rpy="0 0 0"/>
+        </joint>
+
+        <!-- camera -->
+      <gazebo reference="main_camera_link">
+        <sensor type="camera" name="camera1">
+          <update_rate>10.0</update_rate>
+          <camera name="main_cam">
+
+              <pose>0 0 0 0 0 0</pose>
+
+            <horizontal_fov>1.3962634</horizontal_fov>
+            <image>
+              <width>400</width>
+              <height>400</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.01</near>
+              <far>10.0</far>
+            </clip>
+            <noise>
+              <type>gaussian</type>
+              <stddev>0.0</stddev>
+            </noise>
+          </camera>
+          <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>0.0</updateRate>
+            <cameraName>pan_and_tilt/raspicam_node</cameraName>
+            <imageTopicName>image_raw</imageTopicName>
+            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+            <frameName>main_camera_link</frameName>
+            <hackBaseline>0.07</hackBaseline>
+            <distortionK1>0.0</distortionK1>
+            <distortionK2>0.0</distortionK2>
+            <distortionK3>0.0</distortionK3>
+            <distortionT1>0.0</distortionT1>
+            <distortionT2>0.0</distortionT2>
+          </plugin>
+        </sensor>
+      </gazebo>
+    </xacro:macro>
+
+</robot>

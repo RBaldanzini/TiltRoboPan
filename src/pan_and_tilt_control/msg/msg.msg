@@ -1,0 +1,2 @@
+# Bool values
+Bool msg

@@ -1,0 +1,40 @@
+<robot xmlns:xacro="https://www.ros.org/wiki/xacro" name="data">
+
+
+    <xacro:property name="PI" value="3.14"/>
+
+    <xacro:property name="chassisHeight" value="0.1"/>
+    <xacro:property name="chassisLength" value="0.3"/>
+    <xacro:property name="chassisWidth" value="0.2"/>
+    <xacro:property name="chassisMass" value="6"/>
+
+    <xacro:property name="wheelRadius" value="0.06"/>
+    <xacro:property name="wheelWidth" value="0.05"/>
+    <xacro:property name="wheelMass" value="5"/>
+
+    <xacro:property name="casterRadius" value="0.03"/>
+
+    <xacro:property name="cameraSize" value="0.05"/>
+    <xacro:property name="cameraMass" value="0.1"/>
+
+    <xacro:property name="joints_long" value="0.05" />
+    <xacro:property name="joints_short" value="0.02" />
+    <xacro:property name="joints_mass" value="0.1" />
+    <xacro:property name="joint_yaw_max_speed" value="1.0" />
+    <xacro:property name="joint_yaw_max_effort" value="1.0" />
+    <xacro:property name="joint_pitch_max_speed" value="0.1" />
+    <xacro:property name="joint_pitch_effort" value="0.1" />
+
+    <xacro:property name="base_long" value="0.010" />
+    <xacro:property name="base_short" value="0.02" />
+    <xacro:property name="base_mass" value="0.001" />
+
+    <xacro:property name="maincamera_size_long" value="0.02" />
+    <xacro:property name="maincamera_size_short" value="0.01" />
+    <xacro:property name="maincamera_mass" value="0.001" />
+    <xacro:property name="maincamera_x_distance" value="0.08" />
+    <xacro:property name="maincamera_z_distance" value="0.174219" />
+
+
+
+</robot>

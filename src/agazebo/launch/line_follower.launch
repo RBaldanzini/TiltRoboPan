@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <node name="line_follower_node"
+      pkg="agazebo"
+      type="linefollower_test_ok3.py"
+      respawn="false"
+      output="screen"/>
+
+  <node name="chase_line_node"
+    pkg="agazebo"
+    type="chase_line2.py"
+    respawn="false"
+    output="screen"/>
+
+  <node name="pan_and_tilt_node"
+    pkg="agazebo"
+    type="pan_and_tilt_def.py"
+    respawn="false"
+    output="screen"/>
+
+</launch>
